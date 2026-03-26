@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>📊 交易复盘笔记</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 50%, #0f3460 100%);
+            min-height: 100vh;
+            color: #e8e8e8;
+            line-height: 1.8;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        
+        header {
+            text-align: center;
+            padding: 40px 0;
+            border-bottom: 2px solid #e94560;
+            margin-bottom: 40px;
+        }
+        
+        h1 {
+            font-size: 2.5em;
+            color: #e94560;
+            margin-bottom: 15px;
+            text-shadow: 0 0 20px rgba(233, 69, 96, 0.5);
+        }
+        
+        .subtitle {
+            color: #a0a0a0;
+            font-size: 1.1em;
+            font-style: italic;
+        }
+        
+        .warning-banner {
+            background: linear-gradient(90deg, #e94560, #ff6b6b);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin: 30px 0;
+            font-weight: bold;
+            box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+        }
+        
+        section {
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        h2 {
+            color: #00d9ff;
+            font-size: 1.5em;
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 1px solid rgba(0, 217, 255, 0.3);
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        
+        h3 {
+            color: #ffd700;
+            font-size: 1.2em;
+            margin: 20px 0 15px 0;
+        }
+        
+        .cycle-flow {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+        
+        .cycle-item {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            padding: 12px 25px;
+            border-radius: 25px;
+            font-weight: bold;
+            color: white;
+            box-shadow: 0 3px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .arrow {
+            color: #e94560;
+            font-size: 1.5em;
+        }
+        
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        
+        th {
+            background: rgba(0, 217, 255, 0.2);
+            color: #00d9ff;
+            font-weight: 600;
+        }
+        
+        tr:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+        
+        .forbidden {
+            color: #ff4757;
+        }
+        
+        .allowed {
+            color: #2ed573;
+        }
+        
+        .forbidden::before {
+            content: "❌ ";
+        }
+        
+        .allowed::before {
+            content: "✅ ";
+        }
+        
+        .highlight-box {
+            background: linear-gradient(135deg, rgba(233, 69, 96, 0.2), rgba(255, 107, 107, 0.1));
+            border-left: 4px solid #e94560;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .success-box {
+            background: linear-gradient(135deg, rgba(46, 213, 115, 0.2), rgba(0, 217, 255, 0.1));
+            border-left: 4px solid #2ed573;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 0 10px 10px 0;
+        }
+        
+        .flow-chart {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 20px;
+            border-radius: 10px;
+            font-family: 'Courier New', monospace;
+            white-space: pre-line;
+            line-height: 2;
+        }
+        
+        .emoji-big {
+            font-size: 1.5em;
+        }
+        
+        .grid-2 {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+        }
+        
+        .card {
+            background: rgba(255, 255, 255, 0.03);
+            border-radius: 10px;
+            padding: 20px;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+        }
+        
+        .card h4 {
+            color: #ffd700;
+            margin-bottom: 10px;
+        }
+        
+        ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        
+        li {
+            padding: 8px 0;
+            padding-left: 25px;
+            position: relative;
+        }
+        
+        li::before {
+            content: "▸";
+            color: #e94560;
+            position: absolute;
+            left: 5px;
+        }
+        
+        .quote-box {
+            background: rgba(0, 217, 255, 0.1);
+            border: 1px solid rgba(0, 217, 255, 0.3);
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            font-style: italic;
+            color: #a0d8ef;
+        }
+        
+        .quote-box::before {
+            content: "💡 ";
+            font-style: normal;
+        }
+        
+        .account-info {
+            background: linear-gradient(135deg, rgba(102, 126, 234, 0.2), rgba(118, 75, 162, 0.2));
+            border-radius: 15px;
+            padding: 25px;
+        }
+        
+        .account-info table {
+            margin: 0;
+        }
+        
+        .final-warning {
+            text-align: center;
+            background: linear-gradient(135deg, rgba(255, 215, 0, 0.2), rgba(255, 165, 0, 0.1));
+            border: 2px solid #ffd700;
+            border-radius: 15px;
+            padding: 25px;
+            margin-top: 40px;
+        }
+        
+        .final-warning h3 {
+            color: #ffd700;
+            margin-bottom: 15px;
+        }
+        
+        footer {
+            text-align: center;
+            padding: 30px;
+            color: #666;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            margin-top: 40px;
+        }
+        
+        .tag {
+            display: inline-block;
+            padding: 3px 10px;
+            border-radius: 15px;
+            font-size: 0.85em;
+            margin: 2px;
+        }
+        
+        .tag-red { background: rgba(255, 71, 87, 0.3); color: #ff4757; }
+        .tag-green { background: rgba(46, 213, 115, 0.3); color: #2ed573; }
+        .tag-blue { background: rgba(0, 217, 255, 0.3); color: #00d9ff; }
+        .tag-yellow { background: rgba(255, 215, 0, 0.3); color: #ffd700; }
+        
+        @media (max-width: 600px) {
+            h1 { font-size: 1.8em; }
+            section { padding: 20px; }
+            .cycle-flow { flex-direction: column; }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 交易复盘笔记</h1>
+            <p class="subtitle">多总结亏钱的地方、赚钱的地方，反思当天为啥没有买入最优秀的操作</p>
+            <p class="subtitle" style="color: #e94560; margin-top: 10px;">你一亏就亏几个点，赚只有一点点 ⚠️</p>
+        </header>
+
+        <div class="warning-banner">
+            🚨 急拉是卖点！是卖点！是卖点！求求你不要在高位接盘了！
+        </div>
+
+        <!-- 一、短线世界观 -->
+        <section>
+            <h2>🌐 一、短线世界观</h2>
+            
+            <h3>市场情绪周期</h3>
+            <div class="cycle-flow">
+                <span class="cycle-item">主升</span>
+                <span class="arrow">→</span>
+                <span class="cycle-item">高位震荡</span>
+                <span class="arrow">→</span>
+                <span class="cycle-item">主跌</span>
+                <span class="arrow">→</span>
+                <span class="cycle-item">低位试错</span>
+            </div>
+
+            <h3>核心概念</h3>
+            <table>
+                <tr>
+                    <th>概念</th>
+                    <th>说明</th>
+                </tr>
+                <tr>
+                    <td><strong>龙头</strong></td>
+                    <td>具有带动性，分歧时强，前期硬刚有辨识度</td>
+                </tr>
+                <tr>
+                    <td><strong>补涨</strong></td>
+                    <td>高位出现亏钱效应时，做同题材低位首板或其他题材切换</td>
+                </tr>
+                <tr>
+                    <td><strong>情绪</strong></td>
+                    <td>情绪转冷买（买错也要买），情绪转弱卖（卖错也要卖）</td>
+                </tr>
+            </table>
+
+            <h3>复包二板战法</h3>
+            <div class="highlight-box">
+                <p>大资金喜欢上的票，有确定性。一般是<strong>龙头二波、首板烂板、二板加速板</strong></p>
+                <p>大资金认为要走二波会买入，三板一般减仓</p>
+            </div>
+
+            <h3>弱转强</h3>
+            <div class="success-box">
+                <p>昨天大烂板，第二天小低开或平开（竞价放量）往上拉较好</p>
+                <p style="color: #ff4757;">⚠️ 第二天高开或大高开不喜欢，容易被资金做盘出货</p>
+            </div>
+        </section>
+
+        <!-- 二、核心交易原则 -->
+        <section>
+            <h2>⚖️ 二、核心交易原则</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>❌ 绝对禁止</h4>
+                    <ul>
+                        <li class="forbidden">不博弈穿越龙头（性价比太低）</li>
+                        <li class="forbidden">不博弈二波（突破完成尾盘回落=大面）</li>
+                        <li class="forbidden">不做次新（从没赚过钱，利润回撤多）</li>
+                        <li class="forbidden">不做转债（不是你能玩的）</li>
+                        <li class="forbidden">不做T（每次死于做T，大多是反T）</li>
+                        <li class="forbidden">不追高接盘（急拉是卖点！）</li>
+                        <li class="forbidden">下降周期不格局（=粪坑找屎）</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h4>✅ 必须执行</h4>
+                    <ul>
+                        <li class="allowed">高位不加仓，只减仓</li>
+                        <li class="allowed">买前思考：辨识度？能否封住？有无溢价？</li>
+                        <li class="allowed">不及预期早点撤</li>
+                        <li class="allowed">弱势买入早点卖，甚至竞价就走</li>
+                        <li class="allowed">拉红就走，卖飞就卖飞</li>
+                        <li class="allowed">同板块有跌停要小心</li>
+                        <li class="allowed">有主线不做支线，有总龙不做分支龙</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 三、竞价法则 -->
+        <section>
+            <h2>📈 三、竞价法则</h2>
+            
+            <h3>明牌焦点股竞价规则</h3>
+            <table>
+                <tr>
+                    <th>情况</th>
+                    <th>操作</th>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-green">超预期</span></td>
+                    <td>不要轻易卖</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-red">不及预期</span></td>
+                    <td>该卖就卖，不要意淫</td>
+                </tr>
+                <tr>
+                    <td><span class="tag tag-red">没红开</span></td>
+                    <td>窜刚股直接竞价跑</td>
+                </tr>
+            </table>
+
+            <div class="quote-box">
+                <strong>竞价重要性判断：</strong><br>
+                地位未定时，竞价重要（谁高谁可能成龙头）；地位清晰时，竞价没那么重要（龙头可任意开）。
+            </div>
+        </section>
+
+        <!-- 四、龙头战法 -->
+        <section>
+            <h2>🐉 四、龙头战法</h2>
+            
+            <h3>龙头特征</h3>
+            <ul>
+                <li class="allowed">具有带动性</li>
+                <li class="allowed">分歧时强</li>
+                <li class="allowed">前期硬刚有辨识度</li>
+                <li class="allowed">进监管后还强是真强（有逻辑要深挖）</li>
+            </ul>
+
+            <h3>操作要点</h3>
+            <div class="highlight-box">
+                <p>✅ 确定是核心龙头时敢于加仓，不要怕高</p>
+                <p>✅ 首阴都不怕，怕什么？</p>
+                <p>⚠️ 高度压制：前龙头高度是下一龙头的天花板</p>
+            </div>
+
+            <h3>妖股龙头战法</h3>
+            <div class="flow-chart">
+前期足够强 → 打出辨识度
+      ↓
+    分歧
+      ↓
+靠近5日线加仓（开仓金额的1/3~1/2）
+      ↓
+破5日线止损
+            </div>
+        </section>
+
+        <!-- 五、实战技巧 -->
+        <section>
+            <h2>🎯 五、实战技巧</h2>
+            
+            <h3>20CM套利战法</h3>
+            <div class="success-box">
+                <p>以传媒这波为例：4月26日出现创业板二连（世纪天鸿），复盘找20CM传媒板块涨停票，集合竞价看高开量能，去接力，容易大肉。</p>
+            </div>
+
+            <h3>板块爆发操作</h3>
+            <table>
+                <tr>
+                    <th>阶段</th>
+                    <th>操作</th>
+                </tr>
+                <tr>
+                    <td><strong>第一天</strong></td>
+                    <td>先上车，可买昨天涨停但今天萎靡的同板块个股</td>
+                </tr>
+                <tr>
+                    <td><strong>第二天</strong></td>
+                    <td>去弱留强</td>
+                </tr>
+                <tr>
+                    <td><strong>高潮后</strong></td>
+                    <td>高开不急买，尾盘介入核心股（最好20cm），博弈第二天反包</td>
+                </tr>
+            </table>
+
+            <h3>板块调整信号</h3>
+            <div class="highlight-box">
+                <p>板块爆发两天后买入核心股 → 调整几天后板块再上攻修复 → <strong>核心股不涨=卖出信号</strong></p>
+            </div>
+
+            <h3>监管股操作流程</h3>
+            <div class="flow-chart">
+被监管当天天地板/接近天地板
+      ↓
+第二天有承接，下午拉红
+      ↓
+= 强势表现，可上车
+      ↓
+平开有承接继续上车
+      ↓
+❌ 死于加速高开4-5个点 + 9:40前涨停但封不住
+            </div>
+        </section>
+
+        <!-- 六、风险警示 -->
+        <section>
+            <h2>⚠️ 六、风险警示</h2>
+            
+            <div class="highlight-box">
+                <h3>板块大分歧前兆</h3>
+                <p>当龙头和后排跳水（如绿色动力），通常是板块大分歧前兆</p>
+                <ul>
+                    <li>当天卖不出去，第二天看龙头</li>
+                    <li>龙头高开=集合竞价跑</li>
+                </ul>
+            </div>
+
+            <h3>高位大阳次日</h3>
+            <ul>
+                <li>低开 = 不及预期赶紧走</li>
+                <li>开盘下杀不回头 = 获利了结不挽留</li>
+            </ul>
+
+            <h3>连板股操作</h3>
+            <div class="highlight-box">
+                <p>低开 + 没有地位的连板股 = 下杀直接走</p>
+                <p style="color: #e94560;"><strong>不狠下心来永远做不大！</strong></p>
+            </div>
+        </section>
+
+        <!-- 七、心理建设 -->
+        <section>
+            <h2>🧠 七、心理建设</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>❌ 人性弱点（必须克服）</h4>
+                    <ul>
+                        <li>下跌趋势不舍得卖</li>
+                        <li>开盘竞价不舍得清仓</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h4>✅ 心态口诀</h4>
+                    <ul>
+                        <li>做短线要<strong>杀伐果断</strong></li>
+                        <li>做股票犹豫是大忌</li>
+                        <li>选股大于技术，持股大于切换</li>
+                        <li>管不住手，高潮次日冲龙头=剁手！</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="warning-banner" style="margin-top: 20px;">
+                一键卖出！可以少亏很多钱！
+            </div>
+        </section>
+
+        <!-- 八、月度规律 -->
+        <section>
+            <h2>📅 八、月度规律</h2>
+            <table>
+                <tr>
+                    <th>月份</th>
+                    <th>特点</th>
+                </tr>
+                <tr>
+                    <td><strong>11月、2月</strong></td>
+                    <td><span class="tag tag-yellow">炒小盘股、妖股的时候</span></td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- 九、预期差思维 -->
+        <section>
+            <h2>🧩 九、预期差思维</h2>
+            
+            <div class="quote-box">
+                当市场大多数人希望它怎么样时，它往往不按大多数人想法走<br>
+                <strong>生于分歧，死于一致！</strong>
+            </div>
+
+            <h3>案例：华强</h3>
+            <div class="success-box">
+                <p>市场情绪弱到极致，需要孤胆英雄激活市场。龙头活不了=市场不用玩，如一滩死水。</p>
+                <p><strong>核心</strong>：利用市场矛盾套利，对龙头信仰的刻意练习，哪怕买一手也是练习。</p>
+            </div>
+        </section>
+
+        <!-- 十、特殊品类 -->
+        <section>
+            <h2>📦 十、特殊品类</h2>
+            
+            <div class="grid-2">
+                <div class="card">
+                    <h4>❌ 不碰品类</h4>
+                    <ul>
+                        <li class="forbidden">期货性质股票（石油、天然气等）</li>
+                        <li class="forbidden">次新股</li>
+                        <li class="forbidden">可转债</li>
+                    </ul>
+                </div>
+                
+                <div class="card">
+                    <h4>✅ 只做</h4>
+                    <ul>
+                        <li class="allowed">历史股性好的股票</li>
+                        <li class="allowed">主升龙头战法</li>
+                        <li class="allowed">不做左侧博弈龙回头</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- 账号信息 -->
+        <section class="account-info">
+            <h2>🔐 账号信息</h2>
+            <table>
+                <tr>
+                    <th>项目</th>
+                    <th>内容</th>
+                </tr>
+                <tr>
+                    <td>VET</td>
+                    <td>80110199</td>
+                </tr>
+                <tr>
+                    <td>SPT</td>
+                    <td>20101088</td>
+                </tr>
+                <tr>
+                    <td>账号</td>
+                    <td>13969862747</td>
+                </tr>
+                <tr>
+                    <td>密码</td>
+                    <td>eBest@752</td>
+                </tr>
+                <tr>
+                    <td>登录提示</td>
+                    <td>登录界面连续点击输入框上方的login进入账号密码框</td>
+                </tr>
+            </table>
+        </section>
+
+        <!-- 最终警示 -->
+        <div class="final-warning">
+            <h3>⚠️ 最终提醒</h3>
+            <p><strong>规则一：</strong>明牌焦点股竞价不超预期要打折扣</p>
+            <p><strong>规则二：</strong>明牌股竞价超预期不要轻易卖</p>
+            <p style="margin-top: 15px; font-size: 1.2em; color: #ffd700;"><strong>节点买入很重要！忍住手等节点，不要急！</strong></p>
+        </div>
+
+        <footer>
+            <p>复盘时间：2026-03-26</p>
+            <p style="margin-top: 10px; color: #666;">只做历史股性好的股票，股性不好的股票看都不看</p>
+        </footer>
+    </div>
+</body>
+</html>
