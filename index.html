@@ -2,7 +2,7 @@
 <html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes">
     <title>📊 交易复盘笔记</title>
     <style>
         * {
@@ -54,6 +54,38 @@
             margin: 30px 0;
             font-weight: bold;
             box-shadow: 0 5px 20px rgba(233, 69, 96, 0.4);
+        }
+        
+        /* 新增按钮样式 */
+        .report-btn-container {
+            text-align: center;
+            margin: 20px 0 10px 0;
+        }
+        .report-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            background: linear-gradient(120deg, #00c6ff, #0072ff);
+            border: none;
+            padding: 14px 32px;
+            border-radius: 50px;
+            font-size: 1.1rem;
+            font-weight: 700;
+            color: white;
+            cursor: pointer;
+            text-decoration: none;
+            box-shadow: 0 6px 18px rgba(0, 114, 255, 0.4);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+            backdrop-filter: blur(4px);
+            letter-spacing: 1px;
+        }
+        .report-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 12px 24px rgba(0, 114, 255, 0.6);
+            background: linear-gradient(120deg, #0099ff, #0055cc);
+        }
+        .report-btn:active {
+            transform: translateY(1px);
         }
         
         section {
@@ -168,10 +200,6 @@
             line-height: 2;
         }
         
-        .emoji-big {
-            font-size: 1.5em;
-        }
-        
         .grid-2 {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
@@ -272,6 +300,7 @@
             h1 { font-size: 1.8em; }
             section { padding: 20px; }
             .cycle-flow { flex-direction: column; }
+            .report-btn { padding: 10px 20px; font-size: 0.9rem; gap: 6px; }
         }
     </style>
 </head>
@@ -282,6 +311,13 @@
             <p class="subtitle">多总结亏钱的地方、赚钱的地方，反思当天为啥没有买入最优秀的操作</p>
             <p class="subtitle" style="color: #e94560; margin-top: 10px;">你一亏就亏几个点，赚只有一点点 ⚠️</p>
         </header>
+
+        <!-- 新增: 跳转到详细数据分析报告的按钮 -->
+        <div class="report-btn-container">
+            <a href="https://bb521.github.io/-trading-notes/trade-analysis.html" target="_blank" rel="noopener noreferrer" class="report-btn">
+                📈 查看完整交易数据分析报告 🔍
+            </a>
+        </div>
 
         <div class="warning-banner">
             🚨 急拉是卖点！是卖点！是卖点！求求你不要在高位接盘了！
